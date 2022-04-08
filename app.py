@@ -35,12 +35,13 @@ def scrap():
 
     try:
         online = device_data['result']['online']
-        if online != latest_online_status:
+        if online != latest_online_status and status != "Nieznany":
             latest_update_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            latest_online_status = online
             print(f"  Status updated at {latest_update_time}")
         else:
             print("  Status remained")
+        
+        latest_online_status = online
 
     except Exception as e:
         status = "Nieznany"
