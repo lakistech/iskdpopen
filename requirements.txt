@@ -1,0 +1,4 @@
+fastapi
+redis
+requests
+tuya-connector-python
