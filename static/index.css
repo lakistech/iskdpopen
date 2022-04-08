@@ -1,0 +1,81 @@
+body {
+    font-family: 'Trebuchet MS', sans-serif;
+    background-color: black;
+    color: white;
+}
+
+.title {
+    display: table;
+    margin: auto;
+}
+
+.container {
+    display: table;
+    margin: auto;
+}
+
+
+.sign {
+    display: table;
+    margin: auto;
+    max-width: 40%;
+    max-height: 30%;
+}
+
+.message {
+    display: table;
+    margin: auto;
+}
+
+.subtitle {
+    display: table;
+    margin: auto;
+}
+
+.techdesc {
+    display: table;
+    margin: auto;
+    font-size:small;
+    color: #222;
+}
+
+
+
+
+.neighbours {
+    display: table;
+    margin: auto;
+    margin-bottom: 5px;
+}
+
+.neighbourLink {
+    text-decoration: none;
+    color: black;
+    display:inline-block;
+}
+
+.assetInfo {
+    border: 1px solid black;
+    overflow: hidden; 
+    margin:auto;
+    display: table;
+}
+
+.asset {
+    /*display: table;
+    margin: auto;*/
+    width: 500px;
+    float:left;
+}
+.traits {
+    /*display: table;
+    margin: auto;*/
+    width: 500px;
+    overflow: hidden; 
+  
+
+}
+
+.asset > img {
+    max-width: 100%;
+}

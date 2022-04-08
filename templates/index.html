@@ -1,2 +1,40 @@
-from fastapi import FastAPI, HTTPException
-app = FastAPI()
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Is KDP open?</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="static/index.css" />
+  </head>
+  <body>
+    <div class="container">
+        <div class="title">
+            <h3>Is KDP Open?</h3>
+        </div>
+      <div>
+        <img src="{{picture_link}}" class="sign"/>
+      </div>
+      <div class="message">
+          <p>
+            <h2>{{message}}</h2>
+          </p>
+      </div>
+
+      <div class="subtitle">
+        <h3>Ostatnie sprawdzenie: {{latest_check_time}}</h3>
+      </div>
+
+      <div class="subtitle">
+        <br/><br/><br/>
+        <p>(C) ISKDPOPEN.PL 2022</p>
+      </div>
+
+      <div class="techdesc">
+        <p>Stan świecenia żarówki jest pobierany przy pomocy API IoT Tuya. <a href="https://github.com/jjlakis/iskdpoen">Zobacz na githubie</a>.</p>
+      </div>
+
+
+    </div>
+
+  </body>
+</html>
