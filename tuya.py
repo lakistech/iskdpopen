@@ -16,7 +16,6 @@ def create_signature(ts, headers, token, url):
     content_sha = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" # Empty payload hashed
     string_to_sign = f"GET\n{content_sha}\n{headers_str}\n{url}"
     message = config.tuya_client_id + token + ts + string_to_sign
-    print(message)
     sign = hmac.new(bytes(config.tuya_client_secret, 'utf-8'), msg=bytes(message, 'utf-8'), digestmod=hashlib.sha256).hexdigest().upper()
     return sign
 
@@ -42,13 +41,10 @@ def get_token():
     return r.json()
 
 def get_device():
-    try:
-        token_response = get_token()
-        token = token_response['result']['access_token']
-    except Exception as e:
-        return {"msg": f"Unable to retrieve token from Tuya API! {e}"}
-    
-    print(f"\n\nTOKEN: {token_response}\n\n")
+    # Exceptions handled on the upper level
+    token_response = get_token()
+    token = token_response['result']['access_token']
+
     headers = create_headers(config.tuya_device_path, token)
     headers['access_token'] = token
     r = requests.get(config.tuya_api_url + config.tuya_device_path, headers=headers)
