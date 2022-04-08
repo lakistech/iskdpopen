@@ -28,7 +28,7 @@ def scrap():
     except Exception as e:
         status = "Nieznany"
         message = f"Wystąpił błąd podczas pobierania danych diwajsa: {e}"
-        print(f"  Device data retrieval failed {e}")
+        print(f"  Device data retrieval failed: {type(e)}: {e.args}")
         return
     
     print("  Device data retrieved")
@@ -44,8 +44,8 @@ def scrap():
 
     except Exception as e:
         status = "Nieznany"
-        meesage = f"Wystąpił błąd podczas parsowania danych diwajsa: {e}"
-        print(f"  Unable to retrieve data: {e}")
+        meesage = f"Wystąpił błąd podczas parsowania danych diwajsa: {type(e)}: {e.args}"
+        print(f"  Unable to retrieve data: {type(e)}: {e.args}")
         return
     
     if online:
