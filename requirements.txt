@@ -1,7 +1,5 @@
 uvicorn
 fastapi
-redis
 requests
-tuya-connector-python
 apscheduler
 jinja2
