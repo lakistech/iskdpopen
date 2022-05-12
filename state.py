@@ -1,4 +1,3 @@
-
 class IsKDPOpenState:
     def _get_initial_state(self):
         return {
@@ -9,7 +8,8 @@ class IsKDPOpenState:
             "latest_update_time": "jakiegoś czasu",
             "visitors_today": {"day": 0, "visitors": {}},
             "latest_api_response": {},
-            "admin_sessions": [] # {"created_at": ..., "pic": }
+            "admin_sessions": [], 
+            "crew_information": {}
         }
 
     def _read_state(self):        

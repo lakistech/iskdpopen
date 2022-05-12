@@ -4,7 +4,7 @@ import requests
 import urllib
 import base64
 from datetime import datetime
-from fastapi import FastAPI, Request, Cookie, Response, Depends, HTTPException
+from fastapi import FastAPI, Request, Cookie, Response, Depends, HTTPException, Form
 from typing import Optional
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -103,7 +103,8 @@ async def index(request: Request):
             "message": current_state['message'],
             "latest_check_time": current_state['latest_check_time'],
             "number_of_visitors_today": number_of_visitors_today,
-            "client_ip": ip
+            "client_ip": ip,
+            "crew_information": current_state['crew_information']
         }
     )
 
@@ -130,7 +131,8 @@ async def index(request: Request, response: Response, ssid: Optional[str] = Cook
         {
             "request": request,
             "user_name": admin_session['name'],
-            "picture_base64": admin_session['picture'].decode()
+            "picture_base64": admin_session['picture'].decode(),
+            "logout_link": "logout"
         }
     )
 
@@ -177,9 +179,29 @@ def main(code: str, ssid: str = Depends(get_session_id)):
     )
 
     state.set_state({"admin_sessions": current_active_sessions})
-
     return RedirectResponse("/msg")
 
+
+@app.post('/update_msg')
+async def main(request: Request, ssid: str = Depends(get_session_id), new_message: str = Form(...)):
+    
+    current_state = state.get_state()
+
+    active_admin_sessions = [s for s in current_state['admin_sessions'] if s['ssid'] == ssid]
+    if not active_admin_sessions:
+        return "To się nie uda."
+    
+    admin_session = active_admin_sessions[0]
+
+    new_crew_information = {
+        "picture": admin_session['picture'].decode(),
+        "name": admin_session['name'],
+        "message": new_message,
+        "date": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    state.set_state({"crew_information": new_crew_information})
+    return RedirectResponse(url='/', status_code=303)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/static", StaticFiles(directory="static"), name="static")

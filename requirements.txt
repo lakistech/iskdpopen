@@ -3,3 +3,4 @@ fastapi
 requests
 apscheduler
 jinja2
+python-multipart

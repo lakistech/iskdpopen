@@ -32,13 +32,17 @@
         <p>
           <h3>Wiadomość od załogi</h3>
         </p>
+        {% if not crew_information %}
+        <p class="techdesc">Brak wiadomości od załogi</p>
+        {% else %}
         <p>
           <div class="author-avatar-wrapper">
-            <img src="https://common.lakis.tech/profilowka_test.jpg"/>
+            <img src="data:image/png;base64, {{ crew_information.picture }}"/>
           </div>
-          <p class="techdesc">Jacek Jakub Łakis | {{ latest_check_time }}</p>
+          <p class="techdesc">{{ crew_information.name }} | {{ crew_information.date }}</p>
         </p>
-        <p>Dzisiaj (wtorek) zajebiste browarki na kranie, lorem ipsum, zapraszamy, zapiekanki zapierdalanki </p>
+        <p>{{ crew_information.message }} </p>
+        {% endif %}
       </div>
 
       <hr class="dotted">

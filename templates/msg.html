@@ -8,8 +8,11 @@
     <link rel="shortcut icon" href="static/favicon.ico">
   </head>
   <body>
-    <p>Witaj {{ user_name }}! </p>
+    <p>Witaj {{ user_name }}! <a href="{{ logout_link }}">Wyloguj</a> </p>
     <img src="data:image/png;base64, {{ picture_base64 }}"/>
-    
+    <form action="/update_msg" method="POST">
+      <input name="new_message" id="new_message" value="">
+      <button>Zaktualizuj wiadomość</button>
+    </form>
   </body>
 </html>
