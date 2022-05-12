@@ -24,8 +24,4 @@ oauth2_app_creds_fetch_url = "{}?client_id={}&client_secret={}&grant_type=client
     "https://graph.facebook.com/oauth/access_token", oauth2_client_id, oauth2_client_secret
 )
 
-
-allowed_userids = [
-    "100001820504411", # Stachu
-    "10220949202425395" # Ja
-]
+allowed_userids = os.getenv("ALLOWED_USERIDS").split(",")
