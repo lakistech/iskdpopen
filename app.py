@@ -112,11 +112,12 @@ async def index():
     return state.get_state()['latest_api_response']
 
 @app.get('/msg')
-async def index(request: Request, response: Response, ssid: Optional[str] = Cookie(None)):
+async def index(request: Request, ssid: Optional[str] = Cookie(None)):
     if not ssid:
         ssid = str(uuid.uuid4())
+        response = RedirectResponse(config.oauth2_login_url)
         response.set_cookie('ssid', str(ssid), secure=True)
-        return RedirectResponse(config.oauth2_login_url)
+        return response
 
     current_state = state.get_state()
     active_admin_sessions = [s for s in current_state['admin_sessions'] if s['ssid'] == ssid]
