@@ -11,9 +11,11 @@ tuya_device_path = f"/v1.0/devices/{tuya_device_id}"
 
 oauth2_token_url = 'https://graph.facebook.com/v6.0/oauth/access_token'
 oauth2_user_info_url = 'https://graph.facebook.com/v6.0/me'
-oauth2_client_id = os.getenv('OAUTH2_CLIENT_ID', 'oauth2_client_id')
-oauth2_client_secret = os.getenv('OAUTH2_CLIENT_SECRET', 'sekret')
-oauth2_redirect_uri = os.getenv('OAUTH2_REDIRECT_URI', 'oauth2_redirect_uri')
+oauth2_client_id = os.getenv('OAUTH2_CLIENT_ID')
+oauth2_client_secret = os.getenv('OAUTH2_CLIENT_SECRET')
+oauth2_redirect_uri = os.getenv('OAUTH2_REDIRECT_URI')
+
+oauth2_login_url = f"https://facebook.com/v13.0/dialog/oauth?client_id={oauth2_client_id}&redirect_uri={oauth2_redirect_uri}"
 
 oauth2_token_fetch_url = oauth2_token_url+'?client_id='+oauth2_client_id + \
     '&client_secret='+oauth2_client_secret+'&redirect_uri='+oauth2_redirect_uri
@@ -23,6 +25,6 @@ oauth2_app_creds_fetch_url = "{}?client_id={}&client_secret={}&grant_type=client
 
 
 allowed_userids = [
-    100001820504411, # Stachu
-    1401053905 # Ja
+    "100001820504411", # Stachu
+    "10220949202425395" # Ja
 ]

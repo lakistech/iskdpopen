@@ -9,14 +9,13 @@ class IsKDPOpenState:
             "latest_update_time": "jakiegoś czasu",
             "visitors_today": {"day": 0, "visitors": {}},
             "latest_api_response": {},
-            "sessions": [] # {"created_at": ..., "pic": }
+            "admin_sessions": [] # {"created_at": ..., "pic": }
         }
 
     def _read_state(self):        
         return self.state
     
     def _write_state(self, state):
-        print(f"we set new state {state}")
         if not hasattr(self, "state"):
             self.state = {}
         

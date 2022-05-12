@@ -1,10 +1,17 @@
+import uuid
+import config
+import requests
+import urllib
+import base64
 from datetime import datetime
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Cookie, Response, Depends, HTTPException
+from typing import Optional
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from apscheduler.schedulers.background import BackgroundScheduler
 from tuya import get_device
+
 
 from state import state
 
@@ -12,6 +19,14 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 sched = BackgroundScheduler(timezone="UTC")
 sched.start()
+
+async def get_session_id(ssid: Optional[str] = Cookie(None)):
+    if ssid:
+        return ssid
+
+    raise HTTPException(
+        status_code=401, detail="Attempted to make an API call without session ID in cookie")
+
 
 @sched.scheduled_job('interval', seconds=5)
 def scrap():
@@ -59,7 +74,6 @@ def scrap():
 
     state.set_state(current_state)
 
-
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     current_state = state.get_state()
@@ -97,11 +111,75 @@ async def index(request: Request):
 async def index():
     return state.get_state()['latest_api_response']
 
-@app.get("/woz")
-async def index(lid: str): # Albo sprawdzmy czy jest w kuki
-    if not lid:
-        return RedirectResponse()
-    # If lid=asdasdasd w passie jest inny niż to co znajdziemy w arrayu z sesjami 
+@app.get('/msg')
+async def index(request: Request, response: Response, ssid: Optional[str] = Cookie(None)):
+    if not ssid:
+        ssid = str(uuid.uuid4())
+        response.set_cookie('ssid', str(ssid), secure=True)
+        return RedirectResponse(config.oauth2_login_url)
+
+    current_state = state.get_state()
+    active_admin_sessions = [s for s in current_state['admin_sessions'] if s['ssid'] == ssid]
+
+    if not active_admin_sessions:
+        return RedirectResponse(config.oauth2_login_url)
+    
+    admin_session = active_admin_sessions[0]
+
+    return templates.TemplateResponse("msg.html", 
+        {
+            "request": request,
+            "user_name": admin_session['name'],
+            "picture_base64": admin_session['picture'].decode()
+        }
+    )
+
+
+@app.get('/oauth_callback')
+def main(code: str, ssid: str = Depends(get_session_id)):
+    token_data = requests.get(f"{config.oauth2_token_fetch_url}&code={code}")
+    if token_data.status_code != 200:
+        raise HTTPException(status_code=401, detail="Token fetch failed with {:d}: {}".format(
+            token_data.status_code, token_data.text))
+
+    token = token_data.json()['access_token']
+    user_query_url = f"{config.oauth2_user_info_url}/?access_token={token}"
+    user_info = requests.get(user_query_url).json()
+
+    if user_info['id'] not in config.allowed_userids:
+        return f"Witaj {user_info['name']}! Niestety nie jesteś upoważniony do zmiany wiadomości od załogi. Twój User ID to: {user_info['id']}"
+
+    # Get profile pic
+    pic_query_url = f"https://graph.facebook.com/v13.0/{user_info['id']}/picture?access_token={token}"
+    pic_temp_path = f"/tmp/{user_info['id']}.jpg"
+
+    urllib.request.urlretrieve(pic_query_url, pic_temp_path)
+
+    # base64 the image
+    encoded_pic = ""
+    with open(pic_temp_path, "rb") as image_file:
+        encoded_pic = base64.b64encode(image_file.read())
+
+    current_active_sessions = state.get_state()['admin_sessions']
+
+    # If user already have active admin sessions - remove them to create new one
+    for s in current_active_sessions:
+        if s['ssid'] == ssid:
+            current_active_sessions.remove(s)
+
+    current_active_sessions.append(
+        {
+            "created_at": (datetime.utcnow() - datetime(1970,1,1)).days,
+            "picture": encoded_pic,
+            "name": str(user_info['name']),
+            "ssid": ssid
+        }
+    )
+
+    state.set_state({"admin_sessions": current_active_sessions})
+
+    return RedirectResponse("/msg")
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/static", StaticFiles(directory="static"), name="static")
