@@ -8,6 +8,7 @@ tuya_api_url = "https://openapi.tuyaeu.com"
 tuya_token_path = "/v1.0/token?grant_type=1"
 tuya_device_path = f"/v1.0/devices/{tuya_device_id}"
 
+call_interval = os.getenv("CALL_INTERVAL", "120")
 
 oauth2_token_url = 'https://graph.facebook.com/v6.0/oauth/access_token'
 oauth2_user_info_url = 'https://graph.facebook.com/v6.0/me'

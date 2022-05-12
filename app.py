@@ -28,7 +28,7 @@ async def get_session_id(ssid: Optional[str] = Cookie(None)):
         status_code=401, detail="Attempted to make an API call without session ID in cookie")
 
 
-@sched.scheduled_job('interval', seconds=5)
+@sched.scheduled_job('interval', seconds=int(config.call_interval))
 def scrap():
     current_state = state.get_state()
     
