@@ -10,8 +10,13 @@
   <body>
     <div class="container">
         <div class="title">
-            <h3>Is KDP Open?</h3>
+            <h2>Is KDP Open?</h2>
         </div>
+        <div class="subtitle">
+          Unikalnych adresów IP dzisiaj: <b>{{ number_of_visitors_today }}</b>
+          <p class="techdesc">Twój adres: {{ client_ip }}</p>
+        </div>
+  
       <div>
         <img src="{{picture_link}}" class="sign"/>
       </div>
@@ -19,19 +24,32 @@
           <p>
             <h2>{{message}}</h2>
           </p>
+          <p>Ostatnie sprawdzenie stanu żarówki: <b>{{latest_check_time}}</b>. <a class="techdesc" href="/latest_response.json">Zobacz pełną odpowiedź z Tuya API</a></p>
+      </div>
+      <hr class="dotted">
+
+      <div class="messageAdd">
+        <p>
+          <h3>Wiadomość od załogi</h3>
+        </p>
+        <p>
+          <div class="author-avatar-wrapper">
+            <img src="https://common.lakis.tech/profilowka_test.jpg"/>
+          </div>
+          <p class="techdesc">Jacek Jakub Łakis | {{ latest_check_time }}</p>
+        </p>
+        <p>Dzisiaj (wtorek) zajebiste browarki na kranie, lorem ipsum, zapraszamy, zapiekanki zapierdalanki </p>
       </div>
 
-      <div class="subtitle">
-        <p>Ostatnie sprawdzenie: {{latest_check_time}}</p>
-      </div>
+      <hr class="dotted">
 
       <div class="subtitle">
-        <br/><br/><br/>
         <p>(C) ISKDPOPEN.PL 2022</p>
       </div>
 
       <div class="techdesc">
-        <p>Stan świecenia żarówki jest pobierany przy pomocy API IoT Tuya. <a href="https://github.com/jjlakis/iskdpopen">Zobacz kod na Githubie</a>.</p>
+
+        <p>Stan świecenia żarówki jest pobierany przy pomocy Tuya IoT Core API. <a class="techdesc" href="https://github.com/jjlakis/iskdpopen">Zobacz kod na Githubie</a>.</p>
       </div>
 
 

@@ -28,6 +28,12 @@ body {
     text-align: center;
 }
 
+.messageAdd {
+    display: table;
+    margin: auto;
+    text-align: center;
+}
+
 .subtitle {
     display: table;
     margin: auto;
@@ -38,12 +44,9 @@ body {
     display: table;
     margin: auto;
     font-size:small;
-    color: #222;
+    color: #666;
     text-align: center;
-
 }
-
-
 
 
 .neighbours {
@@ -83,3 +86,18 @@ body {
 .asset > img {
     max-width: 100%;
 }
+
+
+.author-avatar-wrapper {
+    width: 70px;
+    height: 70px;
+    margin:auto;
+
+  }
+
+.author-avatar-wrapper img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+  
