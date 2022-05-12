@@ -51,7 +51,7 @@ def scrap():
     
     if online:
         status = "Online"
-        message = f"KDP wygląda na otwarty! Żarówka nad barem się świeci od {latest_update_time}."
+        message = f"KDP wygląda na otwarty! Żarówka nad barem świeci się od {latest_update_time}."
         print("  We're online")
     else:
         status = "Offline"
