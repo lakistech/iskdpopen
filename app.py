@@ -4,7 +4,7 @@ import requests
 import urllib
 import base64
 from datetime import datetime
-from fastapi import FastAPI, Request, Cookie, Response, Depends, HTTPException, Form
+from fastapi import FastAPI, Request, Cookie, Response, Depends, HTTPException, Form, Header
 from typing import Optional
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -75,17 +75,16 @@ def scrap():
     state.set_state(current_state)
 
 @app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
+async def index(request: Request, x_real_ip: Optional[str] = Header(None)):
     current_state = state.get_state()
 
     epoch_days = (datetime.utcnow() - datetime(1970,1,1)).days
-    ip = request.client.host
 
     if epoch_days == current_state['visitors_today']['day']:
-        current_state['visitors_today']['visitors'].add(ip)
+        current_state['visitors_today']['visitors'].add(x_real_ip)
     else:
         current_state['visitors_today']['day'] = epoch_days
-        current_state['visitors_today']['visitors'] = {ip}
+        current_state['visitors_today']['visitors'] = {x_real_ip}
 
     number_of_visitors_today = len(current_state['visitors_today']['visitors'])
 
@@ -103,7 +102,7 @@ async def index(request: Request):
             "message": current_state['message'],
             "latest_check_time": current_state['latest_check_time'],
             "number_of_visitors_today": number_of_visitors_today,
-            "client_ip": ip,
+            "client_ip": x_real_ip,
             "crew_information": current_state['crew_information']
         }
     )
@@ -135,7 +134,6 @@ async def index(request: Request, response: Response, ssid: Optional[str] = Cook
             "logout_link": "logout"
         }
     )
-
 
 @app.get('/oauth_callback')
 def main(code: str, ssid: str = Depends(get_session_id)):
