@@ -1,5 +1,6 @@
 import json
 from os.path import exists
+import os
 
 
 class IsKDPOpenState:
@@ -16,66 +17,54 @@ class IsKDPOpenState:
             "crew_information": {}
         }
 
-    # Read state from storage and override self.state
+    # Read state from storage and return
     def _read_state(self):
         if not hasattr(self, "state"):
             self.state = self._get_initial_state()
-        return True
+        return self.state
     
-    # Write state entirely self.state ---> File / Storage
+    # Write to storage and that's it
     def _write_state(self, state):
         for s in state.keys():
             self.state[s] = state[s]
 
     def get_state(self):
-        return self.state
+        return self._read_state() # Sync fromm storage
 
     def set_state(self, state):
-        self._read_state()
         return self._write_state(state)
-
-    def __init__(self):
-        self._read_state() # Initial read from driver
-        return
 
 class IsKDPOpenStateJSONFile(IsKDPOpenState):
 
-    def _write_to_file(self, state):
-        with open(self.filepath, "w+") as outfile:
+    def _write_to_file(self, filepath, state):
+        with open(filepath, "w+") as outfile:
             outfile.write(json.dumps(state, indent=4))
 
-    def _read_from_file(self):
-        with open(self.filepath) as json_file:
+    def _read_from_file(self, filepath):
+        with open(filepath) as json_file:
             return json.load(json_file)
 
     def __init__(self, filepath):
-        self.filepath = filepath
-        self.changed = True
-
         if not exists(filepath):
-            self._write_to_file({})
+            self._write_to_file(filepath, self._get_initial_state())
+        
+        if os.stat(filepath).st_size == 0:
+            self._write_to_file(filepath, self._get_initial_state())
 
-        super().__init__()
+        self.filepath = filepath
 
-    def _read_state(self):        
-        if self.changed:
-            with open(self.filepath) as json_file:
-                self.state = json.load(json_file)
-            self.changed = False
-
-        return self.state
+    def _read_state(self):
+        return self._read_from_file(self.filepath)
     
-    def _write_state(self, state):
-        for s in state.keys():
-            self.state[s] = state[s]
+    def _write_state(self, new_state):
+        state = self._read_state()
+
+        for s in new_state.keys():
+            state[s] = new_state[s]
         
-        self._write_to_file(self.state)
-        with open(self.filepath, "w") as outfile:
-            outfile.write(json.dumps(self.state, indent=4))
-        
-        self.changed = True
+        self._write_to_file(self.filepath, state)
         return True
 
 
-state = IsKDPOpenState()
-#state = IsKDPOpenStateJSONFile("./status.json")
+#state = IsKDPOpenState()
+state = IsKDPOpenStateJSONFile("./status.json")
