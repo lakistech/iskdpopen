@@ -63,11 +63,11 @@ def scrap():
     
     if online:
         current_state['status'] = "Online"
-        current_state['message'] = f"KDP wygląda na otwarty! Żarówka nad barem świeci się od {current_state['latest_update_time']}."
+        current_state['message'] = f"KDP wygląda na otwarty! Żarówka nad barem jest online od {current_state['latest_update_time']}."
         print("  We're online")
     else:
         current_state['status'] = "Offline"
-        current_state['message'] = f"KDP niestety jest zamknięty. Żarówka nad barem jest zgaszona od {current_state['latest_update_time']}."
+        current_state['message'] = f"KDP niestety jest zamknięty. Żarówka nad barem jest offline od {current_state['latest_update_time']}."
         print("  We're offline")
 
     print(f"  We checked at {current_state['latest_check_time']}")
