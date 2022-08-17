@@ -57,7 +57,7 @@ def scrap():
 
     except Exception as e:
         current_state['status'] = "Nieznany"
-        current_state['meesage'] = f"Wystąpił błąd podczas parsowania danych diwajsa: {type(e)}: {e.args}"
+        current_state['message'] = f"Wystąpił błąd podczas parsowania danych diwajsa: {type(e)}: {e.args}"
         print(f"  Unable to retrieve data: {type(e)}: {e.args}")
         return
     
