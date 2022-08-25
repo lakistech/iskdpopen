@@ -1,0 +1,18 @@
+name: Create container
+
+on:
+  push:
+    branches: [ 'master' ] 
+
+jobs:
+ container:
+    runs-on: s0-kaniko
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Create container
+        run: |
+          export REGISTRY_AUTH="$(echo -n $REGISTRY_USER:$REGISTRY_TOKEN | base64)"
+          echo "{\"auths\":{\"$REGISTRY_ADDRESS\":{\"auth\":\"${REGISTRY_AUTH}\"}}}" > /kaniko/.docker/config.json
+          sudo -E /kaniko/executor --insecure --use-new-run --context=dir://$GITHUB_WORKSPACE --dockerfile Dockerfile --destination "$REGISTRY_ADDRESS/$GITHUB_REPOSITORY:0.0.$GITHUB_RUN_NUMBER"
