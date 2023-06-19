@@ -1,53 +1,52 @@
-class IsKDPOpenState:
-    def _get_initial_state(self):
-        return {
+class BulbState:
+    _instance = None
+
+    def __new__(class_, *args, **kwargs):
+        if not isinstance(class_._instance, class_):
+            class_._instance = object.__new__(class_, *args, **kwargs)
+        return class_._instance
+
+    def __init__(self):
+        self.state = {
             "status": "Nieznany",
             "message": "Z jakiegoś powodu nie możemy określić statusu otwarcia KDP",
             "latest_online_status": False,
             "latest_check_time": "Nigdy",
             "latest_update_time": "jakiegoś czasu",
-            "visitors_today": {"day": 0, "visitors": {}},
             "latest_api_response": {},
-            "admin_sessions": [], 
-            "crew_information": {}
+            "admin_sessions": []
         }
-
-    def _read_state(self):        
-        return self.state
     
-    def _write_state(self, state):
-        if not hasattr(self, "state"):
-            self.state = {}
-        
+    def set_state(self, state):
         for s in state.keys():
             self.state[s] = state[s]
 
-    def get_state(self):
-        state = self._read_state()
+    def insert_visitor(self, date, visitor_ip):
+        return 0
 
-        if not state:
-            state = self._get_initial_state()
-            self._write_state(state)
+    def get_todays_visitors(self):
+        return len(self.visitors_today['visitors'])
 
-        return state
 
-    def set_state(self, state):
-        return self._write_state(state)
+class VisitCounter:
+    _instance = None
+
+    def __new__(class_, *args, **kwargs):
+        if not isinstance(class_._instance, class_):
+            class_._instance = object.__new__(class_, *args, **kwargs)
+        return class_._instance
 
     def __init__(self):
-        self.set_state({})
+        self.current_day = 0
+        self.todays_visitors = []
 
-class IsKDPOpenStateJSONFile(IsKDPOpenState):
-    def __init__(self, filepath):
-        super(IsKDPOpenStateJSONFile).__init__()
-        self.filepath = filepath
-
-    def _read_state(self):
-        return self.state
+    def insert_visitor(self, now_epoch_days, visitor_ip):
+        if now_epoch_days == self.current_day:
+            self.todays_visitors.add(visitor_ip)
+        else:
+            self.current_day = now_epoch_days
+            self.todays_visitors = {visitor_ip}
+        return 0
     
-    def _write_state(self, state):
-        for s in state.keys():
-            self.state[s] = state[s]
-
-
-state = IsKDPOpenState()
+    def get_todays_visitors_count(self):
+        return len(self.todays_visitors)
