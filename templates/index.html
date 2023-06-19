@@ -28,27 +28,8 @@
       </div>
       <hr class="dotted">
 
-      <div class="message">
-        <p>
-          <h3>Wiadomość od załogi</h3>
-        </p>
-        {% if not crew_information %}
-        <p class="techdesc">Brak wiadomości od załogi</p>
-        {% else %}
-        <p>
-          <div class="author-avatar-wrapper">
-            <img src="data:image/png;base64, {{ crew_information.picture }}"/>
-          </div>
-          <p class="techdesc">{{ crew_information.name }} | {{ crew_information.date }}</p>
-        </p>
-        <p>{{ crew_information.message }} </p>
-        {% endif %}
-      </div>
-
-      <hr class="dotted">
-
       <div class="subtitle">
-        <p>(C) ISKDPOPEN.PL 2022</p>
+        <p>(C) ISKDPOPEN.PL 2023</p>
         <p><a class="techdesc" href="https://github.com/jjlakis/iskdpopen">Zobacz kod na Githubie</a></p>
       </div>
 
